@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "kr5vU3W5rb4y5o879TgIdO75fGbhZZxpmsVV9EXsHfY4en3ZWUZBNx/bnWAevlZke5ZOIMhcrQkZwurDKTaYBw==",
+  "dgSpecHash": "oUw0BQoh2VL7aZfoX4u0GnBAUUWHCi/uMQ28CuyX/B8sxo70pnRSttJolx35lol0zw0ZT8y8eqZKOmMaeYFCMg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Daniel\\Comp2001\\Comp2001\\Comp2001.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Daniel\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Daniel\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\Daniel\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Daniel\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",

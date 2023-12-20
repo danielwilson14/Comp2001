@@ -90,11 +90,13 @@ namespace Comp2001.Controllers
           {
               return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
           }
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
+
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
