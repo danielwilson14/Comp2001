@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comp2001.Models
 {
+    [Table("Locations", Schema = "CW1")]
+
     public class Location
     {
         [Key]

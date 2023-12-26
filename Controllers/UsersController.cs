@@ -10,18 +10,20 @@ using Comp2001.Models;
 
 namespace Comp2001.Controllers
 {
+    // Controller for CRUD operations on 'Users' entities.
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
+        // Constructor for dependency injection of the database context.
         public UsersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Users
+        // GET all Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -32,7 +34,7 @@ namespace Comp2001.Controllers
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/Users/5
+        // GET Users by specific ID
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {

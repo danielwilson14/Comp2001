@@ -10,18 +10,20 @@ using Comp2001.Models;
 
 namespace Comp2001.Controllers
 {
+    // Controller for CRUD operations on 'UserActivities' entities.
     [Route("api/[controller]")]
     [ApiController]
     public class UserActivitiesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
+        // Constructor for dependency injection of the database context.
         public UserActivitiesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/UserActivities
+        // GET all User Activities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserActivity>>> GetUserActivity()
         {
@@ -32,7 +34,7 @@ namespace Comp2001.Controllers
             return await _context.UserActivity.ToListAsync();
         }
 
-        // GET: api/UserActivities/5
+        // GET User activity by specific ID
         [HttpGet("{id}")]
         public async Task<ActionResult<UserActivity>> GetUserActivity(int id)
         {

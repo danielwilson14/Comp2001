@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comp2001.Models
 {
+    [Table("UserPreferences", Schema = "CW1")]
+
     public class UserPreferences
     {
         [Key]
@@ -9,8 +12,8 @@ namespace Comp2001.Models
 
         public string Units { get; set; }
         public string ActivityTimePreference { get; set; }
-        public float Height { get; set; }
-        public float Weight { get; set; }
+        public int Height { get; set; }
+        public int Weight { get; set; }
         public string MarketingLanguage { get; set; }
 
     }

@@ -10,18 +10,20 @@ using Comp2001.Models;
 
 namespace Comp2001.Controllers
 {
+    // Controller for CRUD operations on 'UserPreferences' entities.
     [Route("api/[controller]")]
     [ApiController]
     public class UserPreferencesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
+        // Constructor for dependency injection of the database context.
         public UserPreferencesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/UserPreferences
+        // GET all User Preferences
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserPreferences>>> GetUserPreferences()
         {
@@ -32,7 +34,7 @@ namespace Comp2001.Controllers
             return await _context.UserPreferences.ToListAsync();
         }
 
-        // GET: api/UserPreferences/5
+        // GET User preferences by specific ID
         [HttpGet("{id}")]
         public async Task<ActionResult<UserPreferences>> GetUserPreferences(int id)
         {

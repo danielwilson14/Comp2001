@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comp2001.Models
 {
+    [Table("Users", Schema = "CW1")]
     public class User
     {
         [Key]
@@ -14,13 +16,13 @@ namespace Comp2001.Models
         [EmailAddress]
         public string Email { get; set; }
         public string AboutMe { get; set; }
-        public string LocationID { get; set; }
+        public int LocationID { get; set; }
         [Required]
         public DateTime Birthday { get; set; }
         [Required]
         public string Password { get; set; }
-        public string Archived { get; set; }
-        public string Admin { get; set; }
+        public bool Archived { get; set; }
+        public bool Admin { get; set; }
 
     }
 }

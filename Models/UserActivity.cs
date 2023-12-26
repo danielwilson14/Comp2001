@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comp2001.Models
 {
+    [Table("UserActivities", Schema = "CW1")]
+
     public class UserActivity
     {
         [Key]
@@ -12,7 +15,7 @@ namespace Comp2001.Models
 
         [Required]
         [StringLength(200)]
-        public string Activity { get; set; }
+        public string ActivityName { get; set; }
 
     }
 }

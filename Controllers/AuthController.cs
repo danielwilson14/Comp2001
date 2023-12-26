@@ -14,25 +14,23 @@ namespace Comp2001.Controllers
     {
         private readonly HttpClient _httpClient;
 
+        // Constructor for dependency injection of HttpClientFactory.
         public AuthController(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
         }
-
+        // Endpoint for user login.
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+            // Serialize login credentials and send a POST request to the authentication API.
             var content = new StringContent(JsonConvert.SerializeObject(loginDto), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("https://api.example.com/v2/login", content);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                return Unauthorized();
-            }
 
-            var resultContent = await response.Content.ReadAsStringAsync();
+            var response = await _httpClient.PostAsync("https://web.socem.plymouth.ac.uk/COMP2001/auth/api/users", content);
 
-            return Ok(resultContent); 
+            // Return the appropriate action based on the response status.
+            return response.IsSuccessStatusCode ? Ok(await response.Content.ReadAsStringAsync()) : Unauthorized();
         }
     }
 }
