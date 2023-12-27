@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
+using Comp2001.DTOs;
 
 namespace Comp2001.Controllers
 {
@@ -52,17 +53,22 @@ namespace Comp2001.Controllers
             return user;
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        // Update User
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> PutUser(int userId, UserUpdateDTO userUpdateDTO)
         {
-            if (id != user.UserId)
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            user.FirstName = userUpdateDTO.FirstName;
+            user.LastName = userUpdateDTO.LastName;
+            user.Email = userUpdateDTO.Email;
+            user.AboutMe = userUpdateDTO.AboutMe;
+            user.Birthday = userUpdateDTO.Birthday;
+            user.Password = userUpdateDTO.Password;
 
             try
             {
@@ -70,7 +76,7 @@ namespace Comp2001.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!UserExists(userId))
                 {
                     return NotFound();
                 }
@@ -80,34 +86,53 @@ namespace Comp2001.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(user);
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        private bool UserExists(int userId)
         {
-          if (_context.Users == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
-          }
+            return _context.Users.Any(e => e.UserId == userId);
+        }
+
+
+        // Create User
+        [HttpPost]
+        public async Task<ActionResult<UserReadDTO>> PostUser(UserCreateDTO userCreateDTO)
+        {
+            var user = new User
+            {
+                FirstName = userCreateDTO.FirstName,
+                LastName = userCreateDTO.LastName,
+                Email = userCreateDTO.Email,
+                AboutMe = userCreateDTO.AboutMe,
+                LocationID = userCreateDTO.LocationID,
+                Birthday = userCreateDTO.Birthday,
+                Password = userCreateDTO.Password 
+            };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            var userReadDTO = new UserReadDTO
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                AboutMe = user.AboutMe,
+                LocationID = user.LocationID,
+                Birthday = user.Birthday
+            };
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, userReadDTO);
         }
 
 
-        // DELETE: api/Users/5
+
+        // DELETE users
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (_context.Users == null)
-            {
-                return NotFound();
-            }
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -120,9 +145,5 @@ namespace Comp2001.Controllers
             return NoContent();
         }
 
-        private bool UserExists(int id)
-        {
-            return (_context.Users?.Any(e => e.UserId == id)).GetValueOrDefault();
-        }
     }
 }

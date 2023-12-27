@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
+using Comp2001.DTOs;
 
 namespace Comp2001.Controllers
 {
@@ -52,17 +53,21 @@ namespace Comp2001.Controllers
             return userPreferences;
         }
 
-        // PUT: api/UserPreferences/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserPreferences(int id, UserPreferences userPreferences)
+        // Update UserPreferences
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> PutUserPreferences(int userId, UserPreferencesUpdateDTO userPreferencesUpdateDTO)
         {
-            if (id != userPreferences.UserId)
+            var userPreferences = await _context.UserPreferences.FindAsync(userId);
+            if (userPreferences == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(userPreferences).State = EntityState.Modified;
+            userPreferences.Units = userPreferencesUpdateDTO.Units;
+            userPreferences.ActivityTimePreference = userPreferencesUpdateDTO.ActivityTimePreference;
+            userPreferences.Height = userPreferencesUpdateDTO.Height;
+            userPreferences.Weight = userPreferencesUpdateDTO.Weight;
+            userPreferences.MarketingLanguage = userPreferencesUpdateDTO.MarketingLanguage;
 
             try
             {
@@ -70,7 +75,7 @@ namespace Comp2001.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserPreferencesExists(id))
+                if (!UserPreferencesExists(userId))
                 {
                     return NotFound();
                 }
@@ -80,33 +85,42 @@ namespace Comp2001.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(userPreferences);
         }
 
-        // POST: api/UserPreferences
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserPreferences>> PostUserPreferences(UserPreferences userPreferences)
+        public async Task<ActionResult<UserPreferencesReadDTO>> PostUserPreferences(UserPreferencesCreateDTO userPreferencesCreateDTO)
         {
-          if (_context.UserPreferences == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.UserPreferences'  is null.");
-          }
-            _context.UserPreferences.Add(userPreferences);
+            var userPreference = new UserPreferences
+            {
+                UserId = userPreferencesCreateDTO.UserId,
+                Units = userPreferencesCreateDTO.Units,
+                ActivityTimePreference = userPreferencesCreateDTO.ActivityTimePreference,
+                Height = userPreferencesCreateDTO.Height,
+                Weight = userPreferencesCreateDTO.Weight,
+                MarketingLanguage = userPreferencesCreateDTO.MarketingLanguage,
+            };
+
+            _context.UserPreferences.Add(userPreference);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserPreferences", new { id = userPreferences.UserId }, userPreferences);
+            var userPreferencesReadDTO = new UserPreferencesReadDTO
+            {
+                UserId = userPreference.UserId,
+                Units = userPreference.Units,
+                ActivityTimePreference = userPreference.ActivityTimePreference,
+                Height = userPreference.Height,
+                Weight = userPreference.Weight,
+            };
+
+            return CreatedAtAction(nameof(GetUserPreferences), new { id = userPreference.UserId }, userPreferencesReadDTO);
         }
 
-        // DELETE: api/UserPreferences/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserPreferences(int id)
+        // DELETE userPreferences
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUserPreferences(int userId)
         {
-            if (_context.UserPreferences == null)
-            {
-                return NotFound();
-            }
-            var userPreferences = await _context.UserPreferences.FindAsync(id);
+            var userPreferences = await _context.UserPreferences.FindAsync(userId);
             if (userPreferences == null)
             {
                 return NotFound();
@@ -118,9 +132,9 @@ namespace Comp2001.Controllers
             return NoContent();
         }
 
-        private bool UserPreferencesExists(int id)
+        private bool UserPreferencesExists(int userId)
         {
-            return (_context.UserPreferences?.Any(e => e.UserId == id)).GetValueOrDefault();
+            return (_context.UserPreferences?.Any(e => e.UserId == userId)).GetValueOrDefault();
         }
     }
 }

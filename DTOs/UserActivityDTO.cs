@@ -4,13 +4,18 @@
     {
         public int UserActivityId { get; set; }
         public int UserId { get; set; }
-        public string Activity { get; set; }
+        public string ActivityName { get; set; }
     }
 
     public class UserActivityCreateDTO
     {
         public int UserId { get; set; }
-        public string Activity { get; set; }
+        public string ActivityName { get; set; }
+    }
+    public class UserActivityUpdateDTO
+    {
+        public int UserId { get; set; }
+        public string ActivityName { get; set; }
     }
 
 }

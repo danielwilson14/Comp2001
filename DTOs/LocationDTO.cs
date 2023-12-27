@@ -12,4 +12,10 @@
         public string City { get; set; }
         public string Country { get; set; }
     }
+
+    public class LocationUpdateDTO
+    {
+        public string City { get; set; }
+        public string Country { get; set; }
+    }
 }

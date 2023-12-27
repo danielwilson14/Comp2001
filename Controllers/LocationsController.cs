@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
+using Comp2001.DTOs;
+
 
 namespace Comp2001.Controllers
 {
@@ -50,17 +52,18 @@ namespace Comp2001.Controllers
             return location;
         }
 
-        // PUT: api/Locations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocation(int id, Location location)
+        // Update location
+        [HttpPut("{locationId}")]
+        public async Task<IActionResult> PutLocation(int locationId, LocationUpdateDTO locationUpdateDTO)
         {
-            if (id != location.LocationId)
+            var location = await _context.Location.FindAsync(locationId);
+            if (location == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(location).State = EntityState.Modified;
+            location.City = locationUpdateDTO.City;
+            location.Country = locationUpdateDTO.Country;
 
             try
             {
@@ -68,7 +71,7 @@ namespace Comp2001.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!LocationExists(id))
+                if (!LocationExists(locationId))
                 {
                     return NotFound();
                 }
@@ -78,33 +81,37 @@ namespace Comp2001.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(location);
         }
 
         // POST: api/Locations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Location>> PostLocation(Location location)
+        public async Task<ActionResult<LocationReadDTO>> PostLocation(LocationCreateDTO locationCreateDTO)
         {
-          if (_context.Location == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Location'  is null.");
-          }
+            var location = new Location
+            {
+                City = locationCreateDTO.City,
+                Country = locationCreateDTO.Country
+            };
+
             _context.Location.Add(location);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetLocation", new { id = location.LocationId }, location);
+            var locationReadDTO = new LocationReadDTO
+            {
+                LocationId = location.LocationId,
+                City = location.City,
+                Country = location.Country
+            };
+
+            return CreatedAtAction(nameof(GetLocation), new { id = location.LocationId }, locationReadDTO);
         }
 
-        // DELETE: api/Locations/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLocation(int id)
+        // DELETE locations
+        [HttpDelete("{Locationid}")]
+        public async Task<IActionResult> DeleteLocation(int LocationId)
         {
-            if (_context.Location == null)
-            {
-                return NotFound();
-            }
-            var location = await _context.Location.FindAsync(id);
+            var location = await _context.Location.FindAsync(LocationId);
             if (location == null)
             {
                 return NotFound();
@@ -116,9 +123,9 @@ namespace Comp2001.Controllers
             return NoContent();
         }
 
-        private bool LocationExists(int id)
+        private bool LocationExists(int locationId)
         {
-            return (_context.Location?.Any(e => e.LocationId == id)).GetValueOrDefault();
+            return (_context.Location?.Any(e => e.LocationId == locationId)).GetValueOrDefault();
         }
     }
 }

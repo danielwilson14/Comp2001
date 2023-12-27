@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
+using Comp2001.DTOs;
 
 namespace Comp2001.Controllers
 {
@@ -52,17 +53,18 @@ namespace Comp2001.Controllers
             return userActivity;
         }
 
-        // PUT: api/UserActivities/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserActivity(int id, UserActivity userActivity)
+        // Update user activities
+        [HttpPut("{UserActivityId}")]
+        public async Task<IActionResult> PutUserActivity(int UserActivityId, UserActivityUpdateDTO userActivityUpdateDTO)
         {
-            if (id != userActivity.UserActivityId)
+            var userActivity = await _context.UserActivity.FindAsync(UserActivityId);
+            if (userActivity == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(userActivity).State = EntityState.Modified;
+            userActivity.UserId = userActivityUpdateDTO.UserId;
+            userActivity.ActivityName = userActivityUpdateDTO.ActivityName;
 
             try
             {
@@ -70,7 +72,7 @@ namespace Comp2001.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserActivityExists(id))
+                if (!UserActivityExists(UserActivityId))
                 {
                     return NotFound();
                 }
@@ -80,33 +82,37 @@ namespace Comp2001.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(userActivity);
         }
 
         // POST: api/UserActivities
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserActivity>> PostUserActivity(UserActivity userActivity)
+        public async Task<ActionResult<UserActivityReadDTO>> PostUserActivity(UserActivityCreateDTO userActivityCreateDTO)
         {
-          if (_context.UserActivity == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.UserActivity'  is null.");
-          }
+            var userActivity = new UserActivity
+            {
+                UserId = userActivityCreateDTO.UserId,
+                ActivityName = userActivityCreateDTO.ActivityName,
+            };
+
             _context.UserActivity.Add(userActivity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserActivity", new { id = userActivity.UserActivityId }, userActivity);
+            var userActivityReadDTO = new UserActivityReadDTO
+            {
+                UserActivityId = userActivity.UserActivityId,
+                UserId = userActivity.UserId,
+                ActivityName = userActivity.ActivityName,
+            };
+
+            return CreatedAtAction(nameof(GetUserActivity), new { id = userActivity.UserId }, userActivityReadDTO);
         }
 
-        // DELETE: api/UserActivities/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserActivity(int id)
+        // DELETE UserActivities
+        [HttpDelete("{UserActivityid}")]
+        public async Task<IActionResult> DeleteUserActivity(int UserActivityid)
         {
-            if (_context.UserActivity == null)
-            {
-                return NotFound();
-            }
-            var userActivity = await _context.UserActivity.FindAsync(id);
+            var userActivity = await _context.UserActivity.FindAsync(UserActivityid);
             if (userActivity == null)
             {
                 return NotFound();
@@ -118,9 +124,9 @@ namespace Comp2001.Controllers
             return NoContent();
         }
 
-        private bool UserActivityExists(int id)
+        private bool UserActivityExists(int UserActivityId)
         {
-            return (_context.UserActivity?.Any(e => e.UserActivityId == id)).GetValueOrDefault();
+            return (_context.UserActivity?.Any(e => e.UserActivityId == UserActivityId)).GetValueOrDefault();
         }
     }
 }
