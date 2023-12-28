@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
 using Comp2001.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Comp2001.Controllers
 {
     // Controller for CRUD operations on 'UserPreferences' entities.
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserPreferencesController : ControllerBase

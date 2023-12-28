@@ -492,3 +492,5 @@ C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\refint\Comp2001.dll
 C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\Comp2001.pdb
 C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\Comp2001.genruntimeconfig.cache
 C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\ref\Comp2001.dll
+C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll

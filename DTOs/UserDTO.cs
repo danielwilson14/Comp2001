@@ -29,7 +29,7 @@
         public string AboutMe { get; set; }
         public DateTime Birthday { get; set; }
         public string Password { get; set; }
-
+        public bool Admin { get; set; }
 
 
     }

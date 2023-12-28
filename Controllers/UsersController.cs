@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
 using Comp2001.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Comp2001.Controllers
 {
     // Controller for CRUD operations on 'Users' entities.
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -69,6 +71,8 @@ namespace Comp2001.Controllers
             user.AboutMe = userUpdateDTO.AboutMe;
             user.Birthday = userUpdateDTO.Birthday;
             user.Password = userUpdateDTO.Password;
+            user.Admin = userUpdateDTO.Admin;
+
 
             try
             {
@@ -131,6 +135,7 @@ namespace Comp2001.Controllers
 
         // DELETE users
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Comp2001.Data;
 using Comp2001.Models;
 using Comp2001.DTOs;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Comp2001.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
