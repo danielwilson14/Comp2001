@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Comp2001.Controllers
 {
     // Controller for CRUD operations on 'Users' entities.
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase

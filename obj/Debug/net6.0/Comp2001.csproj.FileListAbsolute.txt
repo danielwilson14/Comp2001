@@ -247,7 +247,6 @@ C:\Users\Daniel\COMP-1003\Comp2001\obj\Debug\net6.0\refint\Comp2001.dll
 C:\Users\Daniel\COMP-1003\Comp2001\obj\Debug\net6.0\Comp2001.pdb
 C:\Users\Daniel\COMP-1003\Comp2001\obj\Debug\net6.0\Comp2001.genruntimeconfig.cache
 C:\Users\Daniel\COMP-1003\Comp2001\obj\Debug\net6.0\ref\Comp2001.dll
-C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\appsettings.json
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Comp2001.exe
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Comp2001.deps.json
@@ -258,6 +257,7 @@ C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\BCrypt.Net-Next.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Humanizer.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\MessagePack.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\MessagePack.Annotations.dll
+C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.AspNetCore.Razor.Language.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.Build.dll
@@ -282,6 +282,7 @@ C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.EntityFrameworkCore
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
@@ -492,5 +493,3 @@ C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\refint\Comp2001.dll
 C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\Comp2001.pdb
 C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\Comp2001.genruntimeconfig.cache
 C:\Users\Daniel\Comp2001\Comp2001\obj\Debug\net6.0\ref\Comp2001.dll
-C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\Daniel\Comp2001\Comp2001\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll

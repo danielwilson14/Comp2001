@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comp2001.Models
 {
-    [Table("UserActivities", Schema = "CW1")]
+    [Table("UserActivities", Schema = "CW2")]
 
     public class UserActivity
     {
