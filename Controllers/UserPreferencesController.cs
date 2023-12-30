@@ -38,8 +38,8 @@ namespace Comp2001.Controllers
         }
 
         // GET User preferences by specific ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserPreferences>> GetUserPreferences(int id)
+        [HttpGet("{id}", Name = "GetUserPreferences")]
+        public async Task<ActionResult<UserPreferencesReadDTO>> GetUserPreferences(int id)
         {
           if (_context.UserPreferences == null)
           {
@@ -52,13 +52,43 @@ namespace Comp2001.Controllers
                 return NotFound();
             }
 
-            return userPreferences;
+            var userPreferencesDto = new UserPreferencesReadDTO
+            {
+                UserId = userPreferences.UserId,
+                Units = userPreferences.Units,
+                ActivityTimePreference = userPreferences.ActivityTimePreference,
+                Height = userPreferences.Height,
+                Weight = userPreferences.Weight,
+                MarketingLanguage = userPreferences.MarketingLanguage
+            };
+
+            userPreferencesDto.Links.Add(new LinkDto(Url.Link("GetUserPreferences", new { id = id }), "view userPreferences information", "GET"));
+            userPreferencesDto.Links.Add(new LinkDto(Url.Link("PutUserPreferences", new { userId = id }), "update userPreferences", "PUT"));
+            userPreferencesDto.Links.Add(new LinkDto(Url.Link("DeleteUserPreferences", new { userId = id }), "delete userPreferences", "DELETE"));
+
+            return userPreferencesDto;
         }
 
         // Update UserPreferences
-        [HttpPut("{userId}")]
+        [HttpPut("{userId}", Name = "PutUserPreferences")]
         public async Task<IActionResult> PutUserPreferences(int userId, UserPreferencesUpdateDTO userPreferencesUpdateDTO)
         {
+
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserID");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var tokenUserId = int.Parse(userIdClaim.Value);
+
+            // Check if the userId in the path matches the userId from the token
+            if (userId != tokenUserId)
+            {
+                return Forbid(); // User is not authorized to edit these preferences
+            }
+
+
             var userPreferences = await _context.UserPreferences.FindAsync(userId);
             if (userPreferences == null)
             {
@@ -119,7 +149,7 @@ namespace Comp2001.Controllers
         }
 
         // DELETE userPreferences
-        [HttpDelete("{userId}")]
+        [HttpDelete("{userId}", Name = "DeleteUserPreferences")]
         public async Task<IActionResult> DeleteUserPreferences(int userId)
         {
             var userPreferences = await _context.UserPreferences.FindAsync(userId);

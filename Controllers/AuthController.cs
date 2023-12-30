@@ -64,7 +64,7 @@ namespace Comp2001.Controllers
                     string role = user.Admin ? "Admin" : "User";
 
                     // Generate a token with the user's email and role
-                    var token = _tokenService.GenerateToken(loginDto.Email, role);
+                    var token = _tokenService.GenerateToken(loginDto.Email, role, user.UserId);
 
                     // Return the token
                     return Ok(new { Token = token });

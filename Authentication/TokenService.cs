@@ -6,7 +6,7 @@ using System.Text;
 
 public class TokenService
 {
-    public string GenerateToken(string userEmail, string role)
+    public string GenerateToken(string userEmail, string role, int userId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes("really_crazily_long_super_secret_key");
@@ -15,7 +15,8 @@ public class TokenService
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Email, userEmail),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
+                new Claim("UserID", userId.ToString())
             }),
             Expires = DateTime.UtcNow.AddHours(6), //amount of hours the token is valid for
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

@@ -8,6 +8,8 @@
         public int Height { get; set; }
         public int Weight { get; set; }
         public string MarketingLanguage { get; set; }
+        public List<LinkDto> Links { get; set; } = new List<LinkDto>();
+
     }
 
     public class UserPreferencesCreateDTO

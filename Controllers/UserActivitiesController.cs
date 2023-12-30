@@ -38,8 +38,8 @@ namespace Comp2001.Controllers
         }
 
         // GET User activity by specific ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserActivity>> GetUserActivity(int id)
+        [HttpGet("{id}", Name = "GetUserActivity")]
+        public async Task<ActionResult<UserActivityReadDTO>> GetUserActivity(int id)
         {
           if (_context.UserActivity == null)
           {
@@ -52,17 +52,42 @@ namespace Comp2001.Controllers
                 return NotFound();
             }
 
-            return userActivity;
+            var userActivitiesDto = new UserActivityReadDTO
+            {
+                UserActivityId = userActivity.UserActivityId,
+                UserId = userActivity.UserId,
+                ActivityName = userActivity.ActivityName
+            };
+
+            userActivitiesDto.Links.Add(new LinkDto(Url.Link("GetUserActivity", new { id = id }), "view userActivity information", "GET"));
+            userActivitiesDto.Links.Add(new LinkDto(Url.Link("PutUserActivity", new { UserActivityId = id }), "update userActivity", "PUT"));
+            userActivitiesDto.Links.Add(new LinkDto(Url.Link("DeleteUserActivity", new { UserActivityId = id }), "delete userActivity", "DELETE"));
+
+
+            return userActivitiesDto;
         }
 
         // Update user activities
-        [HttpPut("{UserActivityId}")]
+        [HttpPut("{UserActivityId}", Name = "PutUserActivity")]
         public async Task<IActionResult> PutUserActivity(int UserActivityId, UserActivityUpdateDTO userActivityUpdateDTO)
         {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserID");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
             var userActivity = await _context.UserActivity.FindAsync(UserActivityId);
             if (userActivity == null)
             {
                 return NotFound();
+            }
+
+            if (userActivity.UserId != userId)
+            {
+                return Forbid();
             }
 
             userActivity.UserId = userActivityUpdateDTO.UserId;
@@ -111,7 +136,7 @@ namespace Comp2001.Controllers
         }
 
         // DELETE UserActivities
-        [HttpDelete("{UserActivityid}")]
+        [HttpDelete("{UserActivityid}", Name = "DeleteUserActivity")]
         public async Task<IActionResult> DeleteUserActivity(int UserActivityid)
         {
             var userActivity = await _context.UserActivity.FindAsync(UserActivityid);

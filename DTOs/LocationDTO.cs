@@ -5,6 +5,8 @@
         public int LocationId { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public List<LinkDto> Links { get; set; } = new List<LinkDto>();
+
     }
 
     public class LocationCreateDTO

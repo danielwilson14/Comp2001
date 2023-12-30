@@ -5,6 +5,8 @@
         public int UserActivityId { get; set; }
         public int UserId { get; set; }
         public string ActivityName { get; set; }
+        public List<LinkDto> Links { get; set; } = new List<LinkDto>();
+
     }
 
     public class UserActivityCreateDTO

@@ -36,8 +36,8 @@ namespace Comp2001.Controllers
         }
 
         // GET: api/Locations/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int id)
+        [HttpGet("{id}", Name = "GetLocation")]
+        public async Task<ActionResult<LocationReadDTO>> GetLocation(int id)
         {
           if (_context.Location == null)
           {
@@ -50,11 +50,23 @@ namespace Comp2001.Controllers
                 return NotFound();
             }
 
-            return location;
+            var locationDto = new LocationReadDTO
+            {
+                LocationId = location.LocationId,
+                City = location.City,
+                Country = location.Country
+            };
+
+            locationDto.Links.Add(new LinkDto(Url.Link("GetLocation", new { id = id }), "view location information", "GET"));
+            locationDto.Links.Add(new LinkDto(Url.Link("PutLocation", new { locationId = id }), "update location admin required", "PUT"));
+            locationDto.Links.Add(new LinkDto(Url.Link("DeleteLocation", new { locationId = id }), "delete location admin required", "DELETE"));
+
+            return locationDto;
         }
 
         // Update location
-        [HttpPut("{locationId}")]
+        [HttpPut("{locationId}", Name = "PutLocation")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutLocation(int locationId, LocationUpdateDTO locationUpdateDTO)
         {
             var location = await _context.Location.FindAsync(locationId);
@@ -109,7 +121,9 @@ namespace Comp2001.Controllers
         }
 
         // DELETE locations
-        [HttpDelete("{Locationid}")]
+        [HttpDelete("{Locationid}", Name = "DeleteLocation")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> DeleteLocation(int LocationId)
         {
             var location = await _context.Location.FindAsync(LocationId);

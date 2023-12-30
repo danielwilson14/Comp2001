@@ -9,6 +9,7 @@ using Comp2001.Data;
 using Comp2001.Models;
 using Comp2001.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Comp2001.Controllers
 {
@@ -28,47 +29,91 @@ namespace Comp2001.Controllers
 
         // GET all Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetUsers()
         {
           if (_context.Users == null)
           {
               return NotFound();
           }
-            return await _context.Users.ToListAsync();
+          
+          var users = await _context.Users.Select(u => new UserReadDTO{
+              UserId = u.UserId,
+              FirstName = u.FirstName,
+              LastName = u.LastName,
+              Email = u.Email,
+              AboutMe = u.AboutMe,
+              LocationID = u.LocationID,
+              Birthday = u.Birthday,
+              Archived = u.Archived
+            }).ToListAsync();
+            return users;
+            
         }
 
         // GET Users by specific ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet("{id}", Name = "GetUser")]
+        public async Task<ActionResult<UserReadDTO>> GetUser(int id)
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
-            var user = await _context.Users.FindAsync(id);
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users
+                .Where(u => u.UserId == id)
+                .Select(u => new UserReadDTO
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    AboutMe = u.AboutMe,
+                    LocationID = u.LocationID,
+                    Birthday= u.Birthday,
+                    Archived= u.Archived
+                }).FirstOrDefaultAsync();
 
             if (user == null)
             {
                 return NotFound();
             }
+            user.Links.Add(new LinkDto(Url.Link("GetUser", new { id = user.UserId }), "view user information", "GET"));
+            user.Links.Add(new LinkDto(Url.Link("PutUser", new { userId = user.UserId }), "update user", "PUT"));
+            user.Links.Add(new LinkDto(Url.Link("DeleteUser", new { id = user.UserId }), "delete user admin required", "DELETE"));
 
             return user;
         }
 
         // Update User
-        [HttpPut("{userId}")]
+        [HttpPut("{userId}", Name = "PutUser")]
         public async Task<IActionResult> PutUser(int userId, UserUpdateDTO userUpdateDTO)
         {
+
+
+            // Extract the email from the token
+            var userEmail = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (userEmail == null)
+            {
+                return Unauthorized();
+            }
+
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
+            if (user.Email != userEmail)
+            {
+                return Forbid();
+            }
+
             user.FirstName = userUpdateDTO.FirstName;
             user.LastName = userUpdateDTO.LastName;
             user.Email = userUpdateDTO.Email;
             user.AboutMe = userUpdateDTO.AboutMe;
+            user.LocationID = userUpdateDTO.LocationID;
             user.Birthday = userUpdateDTO.Birthday;
             user.Password = userUpdateDTO.Password;
             user.Admin = userUpdateDTO.Admin;
@@ -134,7 +179,7 @@ namespace Comp2001.Controllers
 
 
         // DELETE users
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteUser")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
